@@ -19,20 +19,20 @@ class MainWindow(QMainWindow):
         helpAcerca = QAction("&Acerca de",self)
         helpMenu.addAction(helpContent)
         helpMenu.addAction(helpAcerca)
-        helpContent.triggered.connect(self.helpContentTriggered)
+        helpContent.triggered.connect(self.help_content_triggered)
         # self.windowTitleChanged.connect(self.onWindowTitleChange)
         focus_in_signal = Signal()
         self.majorLayout = QHBoxLayout()
         self.layout = QVBoxLayout()
         self.table = QTableView()
-        self.marco = QFrame();
+        self.marco = QFrame()
         self.marco.setFrameStyle(QFrame.Box)
         self.marco.setLayout(self.layout)
         self.inputCommands = LineEdit()
         self.inputCommands.setText("Ingrese un comando")
-        self.inputCommands.focus_in_signal.connect(self.focusInCommand)
+        self.inputCommands.focus_in_signal.connect(self.focus_in_command)
         self.layout.addWidget(self.inputCommands)
-        self.inputCommands.returnPressed.connect(self.commandAgregaProducto)
+        self.inputCommands.returnPressed.connect(self.command_agrega_producto)
         self.inputCommands.hide()
         self.input = QLineEdit()
         #self.btn = QPushButton("Agregar")
@@ -55,15 +55,15 @@ class MainWindow(QMainWindow):
         self.table.setModel(self.model)
         self.table.setColumnWidth(1,315)
         self.setCentralWidget(widget)
-        #self.btn.clicked.connect(self.addDatos)
-        self.input.returnPressed.connect(self.addDatos)
-        self.calculateTotal()
+        #self.btn.clicked.connect(self.add_datos)
+        self.input.returnPressed.connect(self.add_datos)
+        self.calculate_total()
 
-    def helpContentTriggered(self):
+    def help_content_triggered(self):
         print("Conectado al contenido de la ayuda")
         self.ventanaHelp.display_help()
 
-    def addDatos(self):
+    def add_datos(self):
         texto = self.input.text()
         valor = self.method_in(self.datosAnexos,texto)
         if(valor is None):
@@ -76,11 +76,11 @@ class MainWindow(QMainWindow):
             self.input.setStyleSheet("border: 1px solid black;")
             self.datos.append(valor)
             self.table.model().layoutChanged.emit()
-            self.calculateTotal()
+            self.calculate_total()
             self.inputCommands.hide()
 
-    def calculateTotal(self):
-        agregado = 0.0;
+    def calculate_total(self):
+        agregado = 0.0
         for i in self.datos:
             agregado += i[2]
         valorfinal = "{:.2f}".format(agregado)
@@ -91,26 +91,26 @@ class MainWindow(QMainWindow):
         for i in a:
             if i[0] == b:
                 return i
-        return None;
-    def focusInCommand(self):
+        return None
+        
+    def focus_in_command(self):
         self.inputCommands.setText("")
 
-    def commandAgregaProducto(self):
-        valor = self.eligeComando(1)
+    def command_agrega_producto(self):
+        valor = self.elige_comando(1)
         print(valor)
         if(valor == self.inputCommands.text()):
             self.ventana.displayInfo()
         else:
             print('Comando incorrecto')
 
-    def ComandoAgregar(self):
+    def comando_agregar(self):
         return "A"
 
-    def eligeComando(self,argument):
-        switcher={
-        1:self.ComandoAgregar()
-        }
-        return switcher.get(argument, lambda:"Opción inválida")
+    def elige_comando(self, argument):
+        return {
+            1: lambda: self.comando_agregar(),
+        }.get(argument, lambda: 'Opción inválida')()
 
 class AddProductWindow(QWidget):
     def __init__(self, elem):
@@ -148,7 +148,7 @@ class AddProductWindow(QWidget):
         self.padre.input.setStyleSheet("border: 1px solid black;")
         self.padre.datos.append(valor)
         self.padre.table.model().layoutChanged.emit()
-        self.padre.calculateTotal()
+        self.padre.calculate_total()
         self.padre.inputCommands.hide()
         self.close()
 
