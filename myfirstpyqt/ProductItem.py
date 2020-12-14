@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PyQt5.QtCore import *
+from PySide2.QtCore import *
 
 class ProductItem(QAbstractTableModel):
     def __init__(self):
@@ -11,7 +11,7 @@ class ProductItem(QAbstractTableModel):
         return 2
     def data(self, index, role = Qt.displayRole):
         product = self.productos[index.row()]
-        return QVariant(product)
+        return product
 
     def insertRows(self, position, rows=1, index=QModelIndex()):
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
