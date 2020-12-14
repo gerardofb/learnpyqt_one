@@ -1,10 +1,11 @@
 # This Python file uses the following encoding: utf-8
-import sys
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-from decimal import *
+from PySide2.QtGui import Qt
+from PySide2.QtWidgets import (
+    QApplication, QMainWindow, QMenuBar, QAction, QHBoxLayout, QPushButton, QVBoxLayout, 
+    QTableView, QFrame, QLineEdit, QWidget, QLabel
+    )
+from PySide2.QtCore import Signal, QAbstractTableModel
+from PySide2.QtWebEngineWidgets import QWebEngineView
 
 class MainWindow(QMainWindow):
     def __init__(self,*args,**kwargs):
@@ -20,7 +21,7 @@ class MainWindow(QMainWindow):
         helpMenu.addAction(helpAcerca)
         helpContent.triggered.connect(self.helpContentTriggered)
         # self.windowTitleChanged.connect(self.onWindowTitleChange)
-        focus_in_signal = pyqtSignal()
+        focus_in_signal = Signal()
         self.majorLayout = QHBoxLayout()
         self.layout = QVBoxLayout()
         self.table = QTableView()
@@ -66,12 +67,12 @@ class MainWindow(QMainWindow):
         texto = self.input.text()
         valor = self.method_in(self.datosAnexos,texto)
         if(valor is None):
-            self.marco.setStyleSheet(".QFrame{border: 1px solid red;}")
+            self.marco.setStyleSheet("QFrame{border: 1px solid red;}")
             self.input.setStyleSheet("border: 1px solid red;")
             self.inputCommands.setText("Ingrese un comando")
             self.inputCommands.show()
         else:
-            self.marco.setStyleSheet(".QFrame{border: 1px solid black;}")
+            self.marco.setStyleSheet("QFrame{border: 1px solid black;}")
             self.input.setStyleSheet("border: 1px solid black;")
             self.datos.append(valor)
             self.table.model().layoutChanged.emit()
@@ -342,7 +343,7 @@ class AddProductWindow(QWidget):
         price = self.inputPrecio.text()
         print("El precio es "+str(price))
         valor = [self.inputSKU.text(), self.inputProduct.text(), float(price)]
-        self.padre.marco.setStyleSheet(".QFrame{border: 1px solid black;}")
+        self.padre.marco.setStyleSheet("QFrame{border: 1px solid black;}")
         self.padre.input.setStyleSheet("border: 1px solid black;")
         self.padre.datos.append(valor)
         self.padre.table.model().layoutChanged.emit()
@@ -374,14 +375,15 @@ class TableModel(QAbstractTableModel):
                 # The following takes the first sub-list, and returns
                 # the length (only works if all rows are an equal length)
         return len(self._data[0])
+
     def headerData(self, col, orientation, role):
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
-                return QVariant(self.headerdata[col])
-            return QVariant()
+                return self.headerdata[col]
+            return None
 
 class LineEdit(QLineEdit):
-    focus_in_signal = pyqtSignal()
-    focus_out_signal = pyqtSignal()
+    focus_in_signal = Signal()
+    focus_out_signal = Signal()
     def focusInEvent(self, event):
         self.focus_in_signal.emit()
         super().focusInEvent(event)
