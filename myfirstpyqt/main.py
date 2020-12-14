@@ -1,11 +1,11 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtGui import Qt
 from PySide2.QtWidgets import (
     QApplication, QMainWindow, QMenuBar, QAction, QHBoxLayout, QPushButton, QVBoxLayout, 
     QTableView, QFrame, QLineEdit, QWidget, QLabel
     )
-from PySide2.QtCore import Signal, QAbstractTableModel
+from PySide2.QtCore import Signal
 from info_windows.help_content_window import HelpContentWindow
+from models.table_model import TableModel
 
 class MainWindow(QMainWindow):
     def __init__(self,*args,**kwargs):
@@ -154,33 +154,6 @@ class AddProductWindow(QWidget):
 
     def displayInfo(self):
         self.show()
-
-class TableModel(QAbstractTableModel):
-    def __init__(self, data, headerData):
-                super(TableModel, self).__init__()
-                self._data = data
-                self.headerdata = headerData
-
-    def data(self, index, role):
-        if role == Qt.DisplayRole:
-                    # See below for the nested-list data structure.
-                    # .row() indexes into the outer list,
-                    # .column() indexes into the sub-list
-            return self._data[index.row()][index.column()]
-
-    def rowCount(self, index):
-                # The length of the outer list.
-        return len(self._data)
-
-    def columnCount(self, index):
-                # The following takes the first sub-list, and returns
-                # the length (only works if all rows are an equal length)
-        return len(self._data[0])
-
-    def headerData(self, col, orientation, role):
-            if orientation == Qt.Horizontal and role == Qt.DisplayRole:
-                return self.headerdata[col]
-            return None
 
 class LineEdit(QLineEdit):
     focus_in_signal = Signal()
