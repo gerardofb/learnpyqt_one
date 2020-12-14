@@ -5,7 +5,7 @@ from PySide2.QtWidgets import (
     QTableView, QFrame, QLineEdit, QWidget, QLabel
     )
 from PySide2.QtCore import Signal, QAbstractTableModel
-from PySide2.QtWebEngineWidgets import QWebEngineView
+from info_windows.help_content_window import HelpContentWindow
 
 class MainWindow(QMainWindow):
     def __init__(self,*args,**kwargs):
@@ -61,7 +61,7 @@ class MainWindow(QMainWindow):
 
     def helpContentTriggered(self):
         print("Conectado al contenido de la ayuda")
-        self.ventanaHelp.displayHelp()
+        self.ventanaHelp.display_help()
 
     def addDatos(self):
         texto = self.input.text()
@@ -111,205 +111,6 @@ class MainWindow(QMainWindow):
         1:self.ComandoAgregar()
         }
         return switcher.get(argument, lambda:"Opción inválida")
-
-class HelpContentWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Ayuda de la aplicación de cobro de Clean Market")
-        self.navegador = QWebEngineView()
-        vbox = QVBoxLayout(self)
-        vbox.addWidget(self.navegador)
-        self.setLayout(vbox)
-
-
-    def displayHelp(self):
-        self.showHelp()
-        self.showMaximized()
-
-    def showHelp(self):
-        self.html='''<!doctype html>
-        <html lang="es">
-        <head>
-        <meta charset="utf-8">
-        <title>Ayuda de aplicación de Cobro de Clean Market</title>
-        <style type="text/css">
-        /* Dropdown Button */
-        h2, h4{
-          color: teal;
-          font-family: Arial, sans-serif;
-        }
-        article{
-          background:lightgray;
-          padding:1.5em;
-          border-radius:10px;
-          margin-top:1em;
-        }
-        p {
-          color:brown;
-          font-family:Helvetica, sans-serif;
-          font-size:14px;
-        }
-        .dropbtn {
-          background-color: #4CAF50;
-          color: white;
-          padding: 16px;
-          font-size: 16px;
-          border: none;
-        }
-
-        /* The container <div> - needed to position the dropdown content */
-        .dropdown {
-          position: relative;
-          display: inline-block;
-        }
-
-        /* Dropdown Content (Hidden by Default) */
-        .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: #f1f1f1;
-          min-width: 160px;
-          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-          z-index: 1;
-        }
-
-        /* Links inside the dropdown */
-        .dropdown-content a {
-          color: black;
-          padding: 12px 16px;
-          text-decoration: none;
-          display: block;
-        }
-
-        /* Change color of dropdown links on hover */
-        .dropdown-content a:hover {background-color: #ddd;}
-
-        /* Show the dropdown menu on hover */
-        .dropdown:hover .dropdown-content {display: block;}
-
-        /* Change the background color of the dropdown button when the dropdown content is shown */
-        .dropdown:hover .dropbtn {background-color: #3e8e41;}
-        </style>
-        </head>
-        <body>
-        <section name="inicio">
-          <main>
-            <h2>
-            Ayuda de la aplicación de cobro de Clean Market
-            </h2>
-          </main>
-        </section>
-        <nav style="width:100%">
-          <div class="dropdown">
-          <button class="dropbtn">Menús</button>
-          <div class="dropdown-content">
-            <a href="#help_menu">Menú ayuda</a>
-            <a href="#file_menu">Menú archivo</a>
-          </div>
-        </div>
-          <div class="dropdown">
-          <button class="dropbtn">Comandos</button>
-          <div class="dropdown-content">
-            <a href="#">Agregar producto</a>
-            <a href="#">Borrar último registro</a>
-            <a href="#">Borrar registros por SKU</a>
-          </div>
-          </div>
-            <div class="dropdown">
-          <button class="dropbtn">Atajos de teclado</button>
-          <div class="dropdown-content">
-            <a href="#">Menú ayuda</a>
-            <a href="#">Menú archivo</a>
-            <a href="#">Comandos</a>
-          </div>
-          </div>
-        </nav>
-        <hr />
-        <section class="content">
-        <main>
-          <h2>
-          Menús de la aplicación
-          </h2>
-        </main>
-          <article>
-            <h4>
-            <a name="help_menu">
-            Menú ayuda
-            </a>
-            </h4>
-            <p>
-            En este menú encontrarás el <a href="#submenu_help_content">contenido de esta ayuda</a> y también información de la licencia del producto.
-            </p>
-            <p>
-            Puedes acceder al menú con la combinación de teclas Ctrl+h. E individualmente a las opciones "Contenido de la ayuda" y "Acerca de" con las combinaciones de teclas Ctrl+Mayúsculas+c y Ctrl+Mayúsculas+a respectivamente. Si deseas más información consulta la <a href="#key_shortcuts">sección de atajos de teclado</a>.
-            </p>
-          </article>
-           <article>
-            <h4>
-            <a name="submenu_help_content">
-            Menú ayuda, contenido de la ayuda
-            </a>
-            </h4>
-            <p>
-            En este submenú encontrarás el conenido de esta ayuda. Accede directamente a él con la combinacion de teclas Ctrl+Mayúsculas+c.
-            </p>
-            <p>
-            </p>
-          </article>
-           <article>
-            <h4>
-            <a name="file_menu">
-            Menú archivo
-            </a>
-            </h4>
-            <p>
-            Desde este menú puedes realizar la <a href="#submenu_file_print">impresión de tus cobros</a>, así como <a href="#submenu_file_new">iniciar un nuevo cobro</a> e <a href="#submenu_file_login">iniciar sesión en la aplicación</a> o bien <a href="#submenu_file_command">levantar una nueva consola de comandos</a>.</p>
-            <p>
-        Puedes acceder al menú con la combinación de teclas Ctrl+f, consulta mayor información en la <a href="#key_shortcuts">sección de atajos de teclado</a>.
-            </p>
-          </article>
-           <article>
-            <h4>
-            <a name="submenu_file_print">
-            Menú archivo, imprimir ticket de cobro
-            </a>
-            </h4>
-            <p>
-            Desde este submenú puedes realizar la impresión de un ticket de cobro, accede rápidamente a él con la combinación de teclas Ctrl+Mayúsculas+p.</p>
-          </article>
-           <article>
-            <h4>
-            <a name="submenu_file_new">
-            Menú archivo, realizar un nuevo cobro
-            </a>
-            </h4>
-            <p>
-            Desde este submenú puedes iniciar un nuevo cobro, siempre y cuando hayas finalizado el anterior cobro. Accede a él con la combinación de teclas Ctrl+Mayúsculas+n</p>
-          </article>
-          <article>
-            <h4>
-            <a name="submenu_file_login">
-            Menú archivo, iniciar o cerrar sesión
-            </a>
-            </h4>
-            <p>
-            Desde este submenú puedes iniciar sesión en la aplicación con tus credenciales o bien cerrar una sesión existente. Accede a él con la combinación de teclas Ctrl+Mayúsculas+l.
-        </p>
-          </article>
-            <article>
-            <h4>
-            <a name="submenu_file_command">
-            Menú archivo, consola de comandos
-            </a>
-            </h4>
-            <p>
-        Este submenú permite levantar una nueva ventana de comandos, es posible también realizar esta acción con la combinación de teclas Ctrl+Mayúsculas+m</p>
-          </article>
-        </section>
-        </body>
-        </html>'''
-        self.navegador.setHtml(self.html)
-
 
 class AddProductWindow(QWidget):
     def __init__(self, elem):
